@@ -8,11 +8,28 @@ export default {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
-        headline: ['Inter', 'sans-serif'],
+        headline: ['"Space Grotesk"', 'sans-serif'],
         code: ['monospace'],
+      },
+      backgroundImage: {
+        'gradient-primary': 'var(--gradient-primary)',
+        'gradient-hero': 'var(--gradient-hero)',
+        'gradient-enterprise': 'var(--gradient-enterprise)',
+      },
+      boxShadow: {
+        enterprise: 'var(--shadow-enterprise)',
+        premium: 'var(--shadow-premium)',
+        glow: 'var(--shadow-glow)',
       },
       colors: {
         background: 'hsl(var(--background))',
