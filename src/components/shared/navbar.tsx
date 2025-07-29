@@ -17,6 +17,7 @@ export function Navbar() {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/support', label: 'Support' },
+    { href: '/about', label: 'About' },
   ];
 
   const handleLinkClick = () => {
@@ -52,11 +53,11 @@ export function Navbar() {
           <div className="hidden md:flex flex-1 items-center gap-6 text-sm">
             <NavItems />
           </div>
-          <div className="flex flex-1 items-center justify-end space-x-4">
+          <div className="flex flex-1 items-center justify-end space-x-2">
             <Button variant="ghost" onClick={() => setAuthDialogOpen(true)}>
               Login
             </Button>
-            <Button className="hidden sm:inline-flex bg-gradient-to-r from-primary to-secondary text-primary-foreground" onClick={() => setAuthDialogOpen(true)}>
+            <Button className="hidden sm:inline-flex bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => setAuthDialogOpen(true)}>
               Sign Up
             </Button>
             <Sheet open={isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>

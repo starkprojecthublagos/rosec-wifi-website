@@ -5,12 +5,13 @@ export type DataPlan = {
   data: string;
   validity: string;
   description: string;
+  features: string[];
   bestValue?: boolean;
 };
 
 export type Hostel = {
   id: string;
-  name: string;
+  name:string;
   active: boolean;
 };
 
@@ -65,7 +66,8 @@ export const dataPlans: DataPlan[] = [
     price: 500,
     data: '2GB',
     validity: '7 Days',
-    description: 'Perfect for light browsing and social media.',
+    description: 'Light browsing & social media.',
+    features: ['2GB Data', '7 Day Validity', 'Great for Socials', 'Basic Speed'],
   },
   {
     id: 'standard',
@@ -73,7 +75,8 @@ export const dataPlans: DataPlan[] = [
     price: 1500,
     data: '10GB',
     validity: '14 Days',
-    description: 'Ideal for streaming and regular online activities.',
+    description: 'Ideal for streaming & study.',
+    features: ['10GB Data', '14 Day Validity', 'HD Streaming', 'High-Speed Access'],
     bestValue: true,
   },
   {
@@ -82,7 +85,8 @@ export const dataPlans: DataPlan[] = [
     price: 5000,
     data: '50GB',
     validity: '30 Days',
-    description: 'For heavy users, online classes, and gaming.',
+    description: 'For gaming & heavy use.',
+    features: ['50GB Data', '30 Day Validity', 'Pro-Gamer Speed', '4K Streaming'],
   },
   {
     id: 'enterprise',
@@ -90,7 +94,8 @@ export const dataPlans: DataPlan[] = [
     price: 15000,
     data: '100GB',
     validity: '30 Days',
-    description: 'Ultimate performance for power users and small teams.',
+    description: 'Ultimate power & speed.',
+    features: ['100GB Data', '30 Day Validity', 'Blazing-Fast Speed', 'Multi-Device Use'],
   },
 ];
 

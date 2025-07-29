@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { locations } from '@/lib/data';
 import type { Location, Hostel } from '@/lib/data';
+import { Wifi } from 'lucide-react';
 
 interface HostelSelectorProps {
   onLocationSelect: (location: Location | null) => void;
@@ -35,18 +36,21 @@ export function HostelSelector({ onLocationSelect, onHostelSelect }: HostelSelec
   return (
     <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
-        <Card className="max-w-2xl mx-auto shadow-premium border-2 border-primary/10">
-          <CardHeader className="text-center">
-            <CardTitle className="font-headline text-3xl">Select Your Residence</CardTitle>
-            <CardDescription>Choose your location and hostel to view available data plans.</CardDescription>
+        <Card className="max-w-2xl mx-auto shadow-premium border-2 border-primary/10 bg-card">
+          <CardHeader className="text-center items-center">
+            <div className="flex justify-center items-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
+                <Wifi className="w-8 h-8"/>
+            </div>
+            <CardTitle className="font-headline text-3xl">Get Connected in 2 Steps</CardTitle>
+            <CardDescription className="text-lg">Select your residence to view available data plans.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-6">
               <div className="grid gap-2">
-                <label className="font-medium">Location</label>
+                <label className="font-medium text-lg">1. Location</label>
                 <Select onValueChange={handleLocationChange} value={selectedLocationId}>
-                  <SelectTrigger className="w-full h-12 text-lg">
-                    <SelectValue placeholder="Select a location" />
+                  <SelectTrigger className="w-full h-14 text-lg">
+                    <SelectValue placeholder="Select a campus" />
                   </SelectTrigger>
                   <SelectContent>
                     {locations.map((location) => (
@@ -60,9 +64,9 @@ export function HostelSelector({ onLocationSelect, onHostelSelect }: HostelSelec
 
               {selectedLocation && (
                 <div className="grid gap-2">
-                  <label className="font-medium">Hostel</label>
+                  <label className="font-medium text-lg">2. Hostel</label>
                   <Select onValueChange={handleHostelChange} value={selectedHostelId} disabled={!selectedLocationId}>
-                    <SelectTrigger className="w-full h-12 text-lg" >
+                    <SelectTrigger className="w-full h-14 text-lg" >
                       <SelectValue placeholder="Select a hostel" />
                     </SelectTrigger>
                     <SelectContent>

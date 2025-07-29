@@ -21,7 +21,7 @@ export function Footer() {
             <div>
               <h3 className="font-semibold text-foreground mb-3">Quick Links</h3>
               <ul className="space-y-2">
-                <li><Link href="#get-started" className="hover:text-primary transition-colors">Get Started</Link></li>
+                <li><Link href="/#get-started" className="hover:text-primary transition-colors">Get Started</Link></li>
                 <li><Link href="/support" className="hover:text-primary transition-colors">Support</Link></li>
                 <li><Link href="/admin" className="hover:text-primary transition-colors">Admin</Link></li>
               </ul>
@@ -29,8 +29,8 @@ export function Footer() {
             <div>
               <h3 className="font-semibold text-foreground mb-3">Legal</h3>
               <ul className="space-y-2">
-                <li><Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link></li>
-                <li><Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link></li>
+                <li><Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
               </ul>
             </div>
           </div>
