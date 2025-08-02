@@ -24,13 +24,15 @@ interface PaymentSectionProps {
   onPayNow: () => void;
 }
 
+type PaymentGateway = 'paystack' | 'flutterwave';
+
 export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<PaymentGateway | null>(null);
   const [isPaid, setIsPaid] = useState(false);
   const [voucherDetails, setVoucherDetails] = useState<{ transactionRef: string; voucherCode: string } | null>(null);
   const { toast } = useToast();
 
-  const handlePayment = async () => {
+  const handlePayment = async (gateway: PaymentGateway) => {
     if (!user) {
       toast({
         title: "Authentication Required",
@@ -41,15 +43,21 @@ export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionP
       return;
     }
 
-    setIsLoading(true);
+    setIsLoading(gateway);
     try {
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
 
+      // In a real implementation, you would use the respective SDKs here
+      // with the public keys from environment variables.
+      // e.g. process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY
+      console.log(`Simulating payment with ${gateway}`);
+      
       const result = await generateVoucher({
         planId: selectedPlan.id,
         planName: selectedPlan.name,
         userId: user.uid,
+        paymentGateway: gateway,
       });
 
       setVoucherDetails(result);
@@ -67,7 +75,7 @@ export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionP
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      setIsLoading(null);
     }
   };
   
@@ -87,7 +95,7 @@ export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionP
         <Card className="max-w-md mx-auto shadow-premium transition-all duration-300 hover:shadow-enterprise">
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Payment Summary</CardTitle>
-            <CardDescription>Confirm your purchase details below.</CardDescription>
+            <CardDescription>Confirm your purchase and choose a provider.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between items-center">
@@ -108,17 +116,26 @@ export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionP
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-4">
-            <Button
-              onClick={handlePayment}
-              disabled={isLoading || isPaid}
-              className="w-full h-12 text-lg bg-accent hover:bg-accent/90"
-            >
-              {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-              {isPaid && <Check className="mr-2 h-5 w-5" />}
-              {isPaid ? 'Payment Confirmed' : isLoading ? 'Processing...' : 'Pay with Paystack'}
-            </Button>
-             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5 text-green-600"/> Secure payments powered by Paystack
+            <div className='w-full space-y-3'>
+               <Button
+                onClick={() => handlePayment('paystack')}
+                disabled={!!isLoading || isPaid}
+                className="w-full h-12 text-lg bg-blue-600 hover:bg-blue-700"
+              >
+                {isLoading === 'paystack' ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
+                Pay with Paystack
+              </Button>
+               <Button
+                onClick={() => handlePayment('flutterwave')}
+                disabled={!!isLoading || isPaid}
+                className="w-full h-12 text-lg bg-orange-500 hover:bg-orange-600"
+              >
+                {isLoading === 'flutterwave' ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : null}
+                Pay with Flutterwave
+              </Button>
+            </div>
+             <p className="text-xs text-muted-foreground flex items-center gap-1.5 pt-2">
+              <ShieldCheck className="h-3.5 w-3.5 text-green-600"/> Secure payments guaranteed
             </p>
           </CardFooter>
         </Card>
@@ -142,7 +159,7 @@ export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionP
             <div className="flex items-center justify-between">
                <div>
                 <p className="text-sm text-muted-foreground">Transaction Reference</p>
-                <p className="font-mono">{voucherDetails?.transactionRef}</p>
+                <p className="font-mono text-sm">{voucherDetails?.transactionRef}</p>
               </div>
               <Button variant="ghost" size="icon" onClick={() => voucherDetails && copyToClipboard(voucherDetails.transactionRef)}><Copy className="h-4 w-4" /></Button>
             </div>

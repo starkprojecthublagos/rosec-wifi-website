@@ -16,6 +16,7 @@ const VoucherGenerationInputSchema = z.object({
   planId: z.string().describe('The ID of the plan being purchased.'),
   planName: z.string().describe('The name of the plan being purchased.'),
   userId: z.string().describe('The ID of the user making the purchase.'),
+  paymentGateway: z.string().describe('The payment gateway used (e.g., Paystack, Flutterwave).'),
 });
 
 export type VoucherGenerationInput = z.infer<typeof VoucherGenerationInputSchema>;
@@ -43,10 +44,12 @@ const voucherGeneratorFlow = ai.defineFlow(
   async (input) => {
     // Simulate generating a unique reference and code
     const timestamp = Date.now();
-    const randomSuffix = Math.random().toString(36).substring(2, 8).toUpperCase();
     
-    const transactionRef = `TXN-${timestamp}`;
-    const voucherCode = `RC-${input.planId.substring(0,2).toUpperCase()}-${randomSuffix}`;
+    // Generate a 12-digit numeric string, padded with leading zeros if necessary.
+    const randomVoucherNum = Math.floor(Math.random() * 1_000_000_000_000).toString().padStart(12, '0');
+
+    const transactionRef = `${input.paymentGateway.toUpperCase()}-${timestamp}`;
+    const voucherCode = randomVoucherNum;
     
     // In a real app, you would now save this to your Firestore database,
     // associating the voucher with the user and plan.
