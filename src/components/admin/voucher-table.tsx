@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardContent,
@@ -17,15 +18,20 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "../ui/button"
 import { PlusCircle } from "lucide-react"
 
-const recentSales = [
-    { name: "Olivia Martin", email: "olivia.martin@email.com", plan: "Premium", status: "Active" },
-    { name: "Jackson Lee", email: "jackson.lee@email.com", plan: "Standard", status: "Active" },
-    { name: "Isabella Nguyen", email: "isabella.nguyen@email.com", plan: "Basic", status: "Expired" },
-    { name: "William Kim", email: "will@email.com", plan: "Enterprise", status: "Active" },
-    { name: "Sofia Davis", email: "sofia.davis@email.com", plan: "Standard", status: "Active" },
-]
+type EnrichedPurchase = {
+    id: string;
+    planName: string;
+    user: {
+        displayName: string;
+        email: string;
+    } | null
+}
 
-export default function VoucherTable() {
+interface VoucherTableProps {
+    recentSales: EnrichedPurchase[];
+}
+
+export default function VoucherTable({ recentSales }: VoucherTableProps) {
     return (
         <Card className="lg:col-span-3">
             <CardHeader className="flex flex-row items-center">
@@ -35,7 +41,7 @@ export default function VoucherTable() {
                         An overview of the most recent vouchers sold.
                     </CardDescription>
                 </div>
-                <Button asChild size="sm" className="ml-auto gap-1">
+                 <Button asChild size="sm" className="ml-auto gap-1" disabled>
                     <a href="#">
                         Create Voucher
                         <PlusCircle className="h-4 w-4" />
@@ -48,25 +54,19 @@ export default function VoucherTable() {
                         <TableRow>
                             <TableHead>Customer</TableHead>
                             <TableHead>Plan</TableHead>
-                            <TableHead>Status</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {recentSales.map((sale, index) => (
-                            <TableRow key={index}>
+                        {recentSales.map((sale) => (
+                            <TableRow key={sale.id}>
                                 <TableCell>
-                                    <div className="font-medium">{sale.name}</div>
+                                    <div className="font-medium">{sale.user?.displayName || 'N/A'}</div>
                                     <div className="hidden text-sm text-muted-foreground md:inline">
-                                        {sale.email}
+                                        {sale.user?.email || 'N/A'}
                                     </div>
                                 </TableCell>
                                 <TableCell>
-                                    <Badge variant="outline">{sale.plan}</Badge>
-                                </TableCell>
-                                <TableCell>
-                                     <Badge variant={sale.status === 'Active' ? 'default' : 'destructive'} className={sale.status === 'Active' ? 'bg-green-500/80' : ''}>
-                                        {sale.status}
-                                    </Badge>
+                                    <Badge variant="outline">{sale.planName}</Badge>
                                 </TableCell>
                             </TableRow>
                         ))}

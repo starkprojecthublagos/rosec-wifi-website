@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -8,17 +9,43 @@ import { UploadCloud, FileDown, FileCheck2, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const vouchers = [
-    { code: 'RC-SDFG-829', plan: 'Premium', status: 'Used', customer: 'test@example.com' },
-    { code: 'RC-ASDF-123', plan: 'Standard', status: 'Active', customer: '' },
-    { code: 'RC-QWER-456', plan: 'Basic', status: 'Active', customer: '' },
-    { code: 'RC-ZXCV-789', plan: 'Enterprise', status: 'Expired', customer: 'another@example.com' },
-];
+type Voucher = {
+    id: string;
+    code: string;
+    planName: string;
+    status: 'Active' | 'Used' | 'Expired';
+    userId: string;
+};
 
 export default function VouchersPage() {
     const { toast } = useToast();
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+    const [vouchers, setVouchers] = useState<Voucher[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchVouchers = async () => {
+            setIsLoading(true);
+            try {
+                const q = query(collection(db, "vouchers"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                const vouchersData: Voucher[] = [];
+                querySnapshot.forEach((doc) => {
+                    vouchersData.push({ id: doc.id, ...doc.data() } as Voucher);
+                });
+                setVouchers(vouchersData);
+            } catch (error) {
+                console.error("Error fetching vouchers:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchVouchers();
+    }, []);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -37,8 +64,8 @@ export default function VouchersPage() {
 
     const handleUpload = () => {
         if (uploadedFile) {
-            // Here you would typically process the CSV file
-            // For this prototype, we'll just show a success message
+            // In a real app, you would process the CSV file here.
+            // This would involve reading the file and adding each voucher to Firestore.
             toast({
                 title: 'Upload Successful',
                 description: `${uploadedFile.name} has been uploaded and vouchers are being processed.`,
@@ -46,6 +73,19 @@ export default function VouchersPage() {
             setUploadedFile(null); // Reset after upload
         }
     }
+
+    const SkeletonRows = () => (
+        <>
+            {Array.from({ length: 5 }).map((_, index) => (
+                 <TableRow key={`skeleton-${index}`}>
+                    <TableCell><Skeleton className="h-8 w-full" /></TableCell>
+                    <TableCell><Skeleton className="h-8 w-full" /></TableCell>
+                    <TableCell><Skeleton className="h-8 w-full" /></TableCell>
+                    <TableCell><Skeleton className="h-8 w-full" /></TableCell>
+                </TableRow>
+            ))}
+        </>
+    );
 
     return (
         <div className="space-y-6">
@@ -105,25 +145,27 @@ export default function VouchersPage() {
                                 <TableHead>Voucher Code</TableHead>
                                 <TableHead>Plan</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead>Assigned To</TableHead>
+                                <TableHead>Assigned To User ID</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {vouchers.map((voucher) => (
-                                <TableRow key={voucher.code}>
-                                    <TableCell className="font-mono">{voucher.code}</TableCell>
-                                    <TableCell>{voucher.plan}</TableCell>
-                                    <TableCell>
-                                        <Badge variant={
-                                            voucher.status === 'Active' ? 'default' : 
-                                            voucher.status === 'Used' ? 'secondary' : 'destructive'
-                                        } className={voucher.status === 'Active' ? 'bg-green-500/80' : ''}>
-                                            {voucher.status}
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell>{voucher.customer || 'N/A'}</TableCell>
-                                </TableRow>
-                            ))}
+                            {isLoading ? <SkeletonRows /> : (
+                                vouchers.map((voucher) => (
+                                    <TableRow key={voucher.id}>
+                                        <TableCell className="font-mono">{voucher.code}</TableCell>
+                                        <TableCell>{voucher.planName}</TableCell>
+                                        <TableCell>
+                                            <Badge variant={
+                                                voucher.status === 'Active' ? 'default' : 
+                                                voucher.status === 'Used' ? 'secondary' : 'destructive'
+                                            } className={voucher.status === 'Active' ? 'bg-green-500/80' : ''}>
+                                                {voucher.status}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="font-mono text-xs">{voucher.userId || 'N/A'}</TableCell>
+                                    </TableRow>
+                                ))
+                            )}
                         </TableBody>
                     </Table>
                 </CardContent>
