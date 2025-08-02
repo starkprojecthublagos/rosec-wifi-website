@@ -1,3 +1,6 @@
+
+'use client';
+
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
@@ -12,17 +15,11 @@ import {
   SidebarTrigger,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, BarChart3, Ticket, Settings, LogOut, Wifi, UploadCloud, MessageSquare, Users } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { LogOut, Wifi } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { usePathname } from 'next/navigation';
 import { AdminSidebarItems } from '@/components/admin/admin-sidebar-items';
 
-export const metadata: Metadata = {
-  title: 'Admin - Rosec Connect',
-  description: 'Admin Dashboard for Rosec Connect',
-};
 
 const AdminUser = () => (
   <div className="flex items-center gap-3">
