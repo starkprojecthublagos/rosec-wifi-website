@@ -12,14 +12,16 @@ import {
   SidebarTrigger,
   SidebarFooter,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, BarChart3, Ticket, Settings, LogOut, Wifi } from 'lucide-react';
+import { LayoutDashboard, BarChart3, Ticket, Settings, LogOut, Wifi, UploadCloud, MessageSquare, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { usePathname } from 'next/navigation';
+import { AdminSidebarItems } from '@/components/admin/admin-sidebar-items';
 
 export const metadata: Metadata = {
-  title: 'Admin - RoseC Connect',
-  description: 'Admin Dashboard for RoseC Connect',
+  title: 'Admin - Rosec Connect',
+  description: 'Admin Dashboard for Rosec Connect',
 };
 
 const AdminUser = () => (
@@ -43,33 +45,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarHeader className="h-16 flex items-center justify-center p-0">
             <Link href="/" className="flex items-center gap-2 font-bold text-primary">
               <Wifi className="h-7 w-7" />
-              <span className="text-lg font-headline group-data-[collapsible=icon]:hidden">RoseC Connect</span>
+              <span className="text-lg font-headline group-data-[collapsible=icon]:hidden">Rosec Connect</span>
             </Link>
           </SidebarHeader>
           <Separator />
           <SidebarContent className="p-2">
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={true} tooltip={{ children: 'Dashboard' }}>
-                  <Link href="/admin"><LayoutDashboard /><span>Dashboard</span></Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip={{ children: 'Sales Analytics' }}>
-                  <Link href="#"><BarChart3 /><span>Sales Analytics</span></Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip={{ children: 'Voucher Management' }}>
-                  <Link href="#"><Ticket /><span>Vouchers</span></Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip={{ children: 'Settings' }}>
-                  <Link href="#"><Settings /><span>Settings</span></Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
+            <AdminSidebarItems />
           </SidebarContent>
           <Separator />
           <SidebarFooter className="p-2">

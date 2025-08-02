@@ -4,13 +4,13 @@ import Image from 'next/image';
 
 export function HeroSection() {
   return (
-    <section className="relative h-[70vh] min-h-[500px] flex items-center justify-center text-center text-white bg-gradient-hero">
+    <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center text-center text-white bg-gradient-hero">
       <Image
-        src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1470"
-        alt="University students collaborating"
+        src="https://images.unsplash.com/photo-1610116306796-6eea9f443e3b?q=80&w=2070"
+        alt="Nigerian students studying"
         fill
         className="absolute inset-0 z-0 object-cover opacity-20"
-        data-ai-hint="university students collaborating"
+        data-ai-hint="nigerian students studying"
         priority
       />
       <div className="relative z-10 p-4 max-w-4xl mx-auto">

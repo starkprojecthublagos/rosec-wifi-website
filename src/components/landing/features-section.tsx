@@ -29,14 +29,14 @@ export function FeaturesSection() {
     <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="font-headline text-3xl font-bold tracking-tight md:text-4xl">Why Choose RoseC Connect?</h2>
+          <h2 className="font-headline text-3xl font-bold tracking-tight md:text-4xl">Why Choose Rosec Connect?</h2>
           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
             We are committed to providing the best internet experience on campus.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, index) => (
-            <Card key={index} className="text-center bg-muted/30 hover:bg-muted/60 transition-colors">
+            <Card key={index} className="text-center bg-muted/30 hover:bg-muted/60 transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
               <CardHeader>
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary mb-4">
                   <feature.icon className="h-8 w-8" />

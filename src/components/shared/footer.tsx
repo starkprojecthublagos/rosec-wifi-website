@@ -11,7 +11,7 @@ export function Footer() {
           <div className="mb-6 md:mb-0">
             <Link href="/" className="flex items-center space-x-2">
               <Wifi className="h-7 w-7 text-primary" />
-              <span className="font-bold text-lg font-headline text-foreground">RoseC Connect</span>
+              <span className="font-bold text-lg font-headline text-foreground">Rosec Connect</span>
             </Link>
             <p className="mt-2 text-sm max-w-xs">
               Premium university internet service provider, delivering fast and reliable connectivity to students.
@@ -37,14 +37,14 @@ export function Footer() {
           <div className="mt-8 md:mt-0">
              <h3 className="font-semibold text-foreground mb-3 text-center md:text-left">Follow Us</h3>
             <div className="flex space-x-4">
-              <Link href="#" className="hover:text-primary transition-colors"><Twitter /></Link>
-              <Link href="#" className="hover:text-primary transition-colors"><Facebook /></Link>
-              <Link href="#" className="hover:text-primary transition-colors"><Instagram /></Link>
+              <span className="cursor-not-allowed text-muted-foreground/50"><Twitter /></span>
+              <span className="cursor-not-allowed text-muted-foreground/50"><Facebook /></span>
+              <span className="cursor-not-allowed text-muted-foreground/50"><Instagram /></span>
             </div>
           </div>
         </div>
         <div className="mt-8 border-t border-border pt-6 text-center text-sm">
-          <p>&copy; {currentYear} RoseC Connect. All rights reserved.</p>
+          <p>&copy; {currentYear} Rosec Connect. All rights reserved.</p>
         </div>
       </div>
     </footer>

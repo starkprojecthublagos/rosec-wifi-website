@@ -42,12 +42,12 @@ export default function SupportPage() {
                 </div>
                 <div className="order-1 md:order-2">
                     <Image
-                        src="https://placehold.co/600x400.png"
+                        src="https://images.unsplash.com/photo-1586469642938-b121ba5427b6?q=80&w=1470"
                         alt="Support team"
                         width={600}
                         height={400}
                         className="rounded-lg shadow-premium"
-                        data-ai-hint="support team"
+                        data-ai-hint="friendly support person"
                     />
                 </div>
             </div>

@@ -106,7 +106,7 @@ export const allFaqs: Faq[] = [
     },
     {
         question: "How do I connect to the WiFi after purchase?",
-        answer: "After a successful purchase, you will receive a voucher code. Go to your device's WiFi settings, select 'RoseC WiFi', and you will be redirected to a login page where you can enter your voucher code."
+        answer: "After a successful purchase, you will receive a voucher code. Go to your device's WiFi settings, select 'Rosec WiFi', and you will be redirected to a login page where you can enter your voucher code."
     },
     {
         question: "Is there a fair usage policy?",

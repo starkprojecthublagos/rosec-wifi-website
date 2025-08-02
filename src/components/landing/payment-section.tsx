@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { DataPlan } from '@/lib/data';
-import { Loader2, Check, Copy } from 'lucide-react';
+import { Loader2, Check, Copy, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
@@ -29,7 +29,7 @@ export function PaymentSection({ selectedPlan }: PaymentSectionProps) {
   const handlePayment = () => {
     setIsLoading(true);
     setTimeout(() => {
-      const ref = `RC-${Date.now()}`;
+      const ref = `TXN-${Date.now()}`;
       setTransactionRef(ref);
       setIsLoading(false);
       setIsPaid(true);
@@ -41,15 +41,17 @@ export function PaymentSection({ selectedPlan }: PaymentSectionProps) {
     }, 2000);
   };
   
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(transactionRef);
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
     toast({ title: "Copied to clipboard!" });
   }
+
+  const voucherCode = `VC-${transactionRef.substring(4, 10)}`;
 
   return (
     <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <Card className="max-w-md mx-auto shadow-premium">
+        <Card className="max-w-md mx-auto shadow-premium transition-all duration-300 hover:shadow-enterprise">
           <CardHeader>
             <CardTitle className="font-headline text-2xl">Payment Summary</CardTitle>
             <CardDescription>Confirm your purchase details below.</CardDescription>
@@ -72,7 +74,7 @@ export function PaymentSection({ selectedPlan }: PaymentSectionProps) {
               <span className="font-bold text-primary">₦{selectedPlan.price.toLocaleString()}</span>
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="flex-col gap-4">
             <Button
               onClick={handlePayment}
               disabled={isLoading || isPaid}
@@ -82,6 +84,9 @@ export function PaymentSection({ selectedPlan }: PaymentSectionProps) {
               {isPaid && <Check className="mr-2 h-5 w-5" />}
               {isPaid ? 'Payment Confirmed' : isLoading ? 'Processing...' : 'Pay with Paystack'}
             </Button>
+             <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+              <ShieldCheck className="h-3.5 w-3.5 text-green-600"/> Secure payments powered by Paystack
+            </p>
           </CardFooter>
         </Card>
       </div>
@@ -90,14 +95,23 @@ export function PaymentSection({ selectedPlan }: PaymentSectionProps) {
           <AlertDialogHeader>
             <AlertDialogTitle className="font-headline text-2xl">Purchase Confirmed!</AlertDialogTitle>
             <AlertDialogDescription>
-              Your voucher code and transaction details are below. Keep them safe.
+              Your voucher code and transaction details are below. Please copy and save them.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <div className="my-4 p-4 bg-muted rounded-lg space-y-2">
-            <p><strong>Voucher Code:</strong> <span className="font-mono">VC-{Date.now()}</span></p>
+          <div className="my-4 p-4 bg-muted rounded-lg space-y-4">
             <div className="flex items-center justify-between">
-              <p><strong>Transaction Ref:</strong> <span className="font-mono">{transactionRef}</span></p>
-              <Button variant="ghost" size="icon" onClick={copyToClipboard}><Copy className="h-4 w-4" /></Button>
+              <div>
+                <p className="text-sm text-muted-foreground">Voucher Code</p>
+                <p className="font-mono font-bold text-lg">{voucherCode}</p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => copyToClipboard(voucherCode)}><Copy className="h-4 w-4" /></Button>
+            </div>
+            <div className="flex items-center justify-between">
+               <div>
+                <p className="text-sm text-muted-foreground">Transaction Reference</p>
+                <p className="font-mono">{transactionRef}</p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => copyToClipboard(transactionRef)}><Copy className="h-4 w-4" /></Button>
             </div>
           </div>
           <AlertDialogFooter>
