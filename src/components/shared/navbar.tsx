@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Wifi, User } from 'lucide-react';
+import { Menu, Wifi, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { AuthDialog } from '../auth-dialog';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
@@ -17,13 +17,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { auth } from '@/lib/firebase';
+import type { User as FirebaseUser } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
 
 
 export function Navbar() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isAuthDialogOpen, setAuthDialogOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Mock login state
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -34,6 +48,22 @@ export function Navbar() {
   const handleLinkClick = () => {
     setMobileMenuOpen(false);
   };
+  
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({
+        title: 'Logged Out',
+        description: 'You have been successfully logged out.',
+      });
+    } catch (error: any) {
+       toast({
+        title: 'Logout Failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
 
   const NavItems = () => (
     <>
@@ -43,8 +73,8 @@ export function Navbar() {
           href={link.href}
           onClick={handleLinkClick}
           className={cn(
-            'transition-colors hover:text-primary',
-            pathname === link.href ? 'text-primary font-semibold' : 'text-muted-foreground'
+            'transition-colors hover:text-primary font-medium',
+            pathname === link.href ? 'text-primary' : 'text-muted-foreground'
           )}
         >
           {link.label}
@@ -65,31 +95,33 @@ export function Navbar() {
             <NavItems />
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
-            {isLoggedIn ? (
+            {!isLoading && (
+              user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="person avatar" />
-                      <AvatarFallback>U</AvatarFallback>
+                   <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={user.photoURL || `https://placehold.co/100x100.png`} alt={user.displayName || 'User'} data-ai-hint="person avatar" />
+                      <AvatarFallback>{user.displayName?.charAt(0) || user.email?.charAt(0)}</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">John Doe</p>
+                      <p className="text-sm font-medium leading-none">{user.displayName || 'User'}</p>
                       <p className="text-xs leading-none text-muted-foreground">
-                        john.doe@example.com
+                        {user.email}
                       </p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild><Link href="/dashboard">Dashboard</Link></DropdownMenuItem>
-                  <DropdownMenuItem>Support</DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link href="/dashboard"><LayoutDashboard /><span>Dashboard</span></Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link href="/support">Support</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => setIsLoggedIn(false)}>
-                    Log out
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut />
+                    <span>Log out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -102,7 +134,7 @@ export function Navbar() {
                   Sign Up
                 </Button>
               </>
-            )}
+            ))}
             <Sheet open={isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="md:hidden">
@@ -123,7 +155,7 @@ export function Navbar() {
           </div>
         </div>
       </header>
-      <AuthDialog open={isAuthDialogOpen} onOpenChange={setAuthDialogOpen} />
+      <AuthDialog open={isAuthDialogOpen} onOpenChange={setAuthDialogOpen} onAuthSuccess={() => setUser(auth.currentUser)} />
     </>
   );
 }
