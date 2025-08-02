@@ -12,8 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
 
@@ -61,8 +62,15 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }: AuthDialogProp
       const userCredential = await createUserWithEmailAndPassword(auth, registerEmail, registerPassword);
       await updateProfile(userCredential.user, { displayName: registerName });
       
-      // Here you would typically also create a user document in Firestore
-      // e.g., await setDoc(doc(db, "users", userCredential.user.uid), { ... });
+      // Create a user document in Firestore
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        uid: userCredential.user.uid,
+        displayName: registerName,
+        email: registerEmail,
+        createdAt: serverTimestamp(),
+        // You can add more fields here, like a role
+        role: 'user'
+      });
 
       toast({
         title: 'Registration Successful',

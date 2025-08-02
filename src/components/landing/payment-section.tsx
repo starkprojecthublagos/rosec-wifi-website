@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { DataPlan } from '@/lib/data';
-import { Loader2, Check, Copy, ShieldCheck } from 'lucide-react';
+import { Loader2, Copy, ShieldCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   AlertDialog,
@@ -34,11 +34,6 @@ export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionP
 
   const handlePayment = async (gateway: PaymentGateway) => {
     if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in or create an account to complete your purchase.",
-        variant: "destructive",
-      });
       onPayNow();
       return;
     }
@@ -47,15 +42,11 @@ export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionP
     try {
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // In a real implementation, you would use the respective SDKs here
-      // with the public keys from environment variables.
-      // e.g. process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY
-      console.log(`Simulating payment with ${gateway}`);
       
       const result = await generateVoucher({
         planId: selectedPlan.id,
         planName: selectedPlan.name,
+        planPrice: selectedPlan.price,
         userId: user.uid,
         paymentGateway: gateway,
       });

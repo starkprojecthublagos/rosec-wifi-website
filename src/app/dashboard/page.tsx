@@ -7,19 +7,25 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut, type User as FirebaseUser } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { collection, query, where, getDocs, orderBy, Timestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { format } from 'date-fns';
 
-const purchaseHistory = [
-    { id: "TXN7462", plan: "Standard Plan", date: "2024-07-15", price: "₦1,500", status: "Active" },
-    { id: "TXN6543", plan: "Basic Plan", date: "2024-06-28", price: "₦500", status: "Expired" },
-    { id: "TXN5432", plan: "Premium Plan", date: "2024-06-15", price: "₦5,000", status: "Expired" },
-];
+type Purchase = {
+    id: string;
+    planName: string;
+    purchaseDate: Timestamp;
+    price: number;
+    transactionRef: string;
+};
 
 export default function DashboardPage() {
     const [user, setUser] = useState<FirebaseUser | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [purchaseHistory, setPurchaseHistory] = useState<Purchase[]>([]);
+    const [isLoadingHistory, setIsLoadingHistory] = useState(true);
     const router = useRouter();
     const { toast } = useToast();
 
@@ -27,6 +33,7 @@ export default function DashboardPage() {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             if (currentUser) {
                 setUser(currentUser);
+                fetchPurchaseHistory(currentUser.uid);
             } else {
                 router.push('/');
             }
@@ -34,6 +41,32 @@ export default function DashboardPage() {
         });
         return () => unsubscribe();
     }, [router]);
+
+    const fetchPurchaseHistory = async (userId: string) => {
+        setIsLoadingHistory(true);
+        try {
+            const q = query(
+                collection(db, "purchases"), 
+                where("userId", "==", userId),
+                orderBy("purchaseDate", "desc")
+            );
+            const querySnapshot = await getDocs(q);
+            const history: Purchase[] = [];
+            querySnapshot.forEach((doc) => {
+                history.push({ id: doc.id, ...doc.data() } as Purchase);
+            });
+            setPurchaseHistory(history);
+        } catch (error) {
+            console.error("Error fetching purchase history: ", error);
+            toast({
+                title: "Error",
+                description: "Could not fetch purchase history.",
+                variant: "destructive"
+            });
+        } finally {
+            setIsLoadingHistory(false);
+        }
+    };
     
     const handleLogout = async () => {
         await signOut(auth);
@@ -46,9 +79,8 @@ export default function DashboardPage() {
     }
     
     if (!user) {
-        return null; // or a loading spinner, or a redirect message
+        return null;
     }
-
 
     return (
         <div className="bg-muted/30 min-h-screen">
@@ -66,7 +98,6 @@ export default function DashboardPage() {
 
                 <div className="grid gap-8 md:grid-cols-3">
                     <div className="md:col-span-2 space-y-8">
-                        {/* Active Plan */}
                         <Card className="shadow-lg transition-all duration-300 hover:shadow-premium">
                              <CardHeader>
                                 <CardTitle className="flex items-center gap-2"><Wifi /> Active Plan</CardTitle>
@@ -95,35 +126,38 @@ export default function DashboardPage() {
                             </CardFooter>
                         </Card>
 
-                        {/* Purchase History */}
                         <Card className="shadow-lg transition-all duration-300 hover:shadow-premium">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2"><History /> Purchase History</CardTitle>
                                  <CardDescription>Review your past transactions.</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <ul className="space-y-4">
-                                    {purchaseHistory.map((item, index) => (
-                                        <li key={index} className="flex justify-between items-center p-4 bg-muted/50 rounded-lg hover:bg-muted/90 transition-colors">
-                                            <div>
-                                                <p className="font-semibold">{item.plan}</p>
-                                                <p className="text-sm text-muted-foreground">{item.date} - ID: {item.id}</p>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="font-semibold text-lg">{item.price}</p>
-                                                <Badge variant={item.status === 'Active' ? 'default' : 'destructive'} className={item.status === 'Active' ? 'bg-green-500/80' : ''}>
-                                                    {item.status}
-                                                </Badge>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
+                                {isLoadingHistory ? (
+                                    <p>Loading history...</p>
+                                ) : purchaseHistory.length > 0 ? (
+                                    <ul className="space-y-4">
+                                        {purchaseHistory.map((item) => (
+                                            <li key={item.id} className="flex justify-between items-center p-4 bg-muted/50 rounded-lg hover:bg-muted/90 transition-colors">
+                                                <div>
+                                                    <p className="font-semibold">{item.planName}</p>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        {format(item.purchaseDate.toDate(), 'PPP')} - ID: {item.transactionRef.split('-')[1]}
+                                                    </p>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="font-semibold text-lg">₦{item.price.toLocaleString()}</p>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p>You have no purchase history.</p>
+                                )}
                             </CardContent>
                         </Card>
                     </div>
 
                     <div className="space-y-8">
-                        {/* Profile */}
                         <Card className="shadow-lg transition-all duration-300 hover:shadow-premium">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2"><User /> Profile Information</CardTitle>
@@ -147,7 +181,6 @@ export default function DashboardPage() {
                             </CardFooter>
                         </Card>
 
-                        {/* Security Alert */}
                         <Card className="border-amber-500/50 bg-amber-500/5 shadow-md">
                             <CardHeader className="flex-row items-center gap-3 space-y-0">
                                 <AlertTriangle className="text-amber-500" />
