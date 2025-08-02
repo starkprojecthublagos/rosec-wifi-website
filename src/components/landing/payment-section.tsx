@@ -15,30 +15,60 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import type { User as FirebaseUser } from 'firebase/auth';
+import { generateVoucher } from '@/ai/flows/voucher-generator';
 
 interface PaymentSectionProps {
   selectedPlan: DataPlan;
+  user: FirebaseUser | null;
+  onPayNow: () => void;
 }
 
-export function PaymentSection({ selectedPlan }: PaymentSectionProps) {
+export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isPaid, setIsPaid] = useState(false);
-  const [transactionRef, setTransactionRef] = useState('');
+  const [voucherDetails, setVoucherDetails] = useState<{ transactionRef: string; voucherCode: string } | null>(null);
   const { toast } = useToast();
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in or create an account to complete your purchase.",
+        variant: "destructive",
+      });
+      onPayNow();
+      return;
+    }
+
     setIsLoading(true);
-    setTimeout(() => {
-      const ref = `TXN-${Date.now()}`;
-      setTransactionRef(ref);
-      setIsLoading(false);
+    try {
+      // Simulate payment processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const result = await generateVoucher({
+        planId: selectedPlan.id,
+        planName: selectedPlan.name,
+        userId: user.uid,
+      });
+
+      setVoucherDetails(result);
       setIsPaid(true);
       toast({
         title: "Payment Successful!",
         description: `Your purchase of the ${selectedPlan.name} plan is complete.`,
-        variant: "default",
       });
-    }, 2000);
+
+    } catch (error) {
+      console.error("Payment or voucher generation failed:", error);
+      toast({
+        title: "Something Went Wrong",
+        description: "We couldn't process your payment. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const copyToClipboard = (text: string) => {
@@ -46,7 +76,10 @@ export function PaymentSection({ selectedPlan }: PaymentSectionProps) {
     toast({ title: "Copied to clipboard!" });
   }
 
-  const voucherCode = `VC-${transactionRef.substring(4, 10)}`;
+  const closeDialog = () => {
+    setIsPaid(false);
+    setVoucherDetails(null);
+  }
 
   return (
     <section className="py-16 md:py-24">
@@ -90,7 +123,7 @@ export function PaymentSection({ selectedPlan }: PaymentSectionProps) {
           </CardFooter>
         </Card>
       </div>
-      <AlertDialog open={isPaid && !!transactionRef} onOpenChange={() => setIsPaid(false)}>
+      <AlertDialog open={isPaid && !!voucherDetails} onOpenChange={closeDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="font-headline text-2xl">Purchase Confirmed!</AlertDialogTitle>
@@ -102,20 +135,20 @@ export function PaymentSection({ selectedPlan }: PaymentSectionProps) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Voucher Code</p>
-                <p className="font-mono font-bold text-lg">{voucherCode}</p>
+                <p className="font-mono font-bold text-lg">{voucherDetails?.voucherCode}</p>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => copyToClipboard(voucherCode)}><Copy className="h-4 w-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => voucherDetails && copyToClipboard(voucherDetails.voucherCode)}><Copy className="h-4 w-4" /></Button>
             </div>
             <div className="flex items-center justify-between">
                <div>
                 <p className="text-sm text-muted-foreground">Transaction Reference</p>
-                <p className="font-mono">{transactionRef}</p>
+                <p className="font-mono">{voucherDetails?.transactionRef}</p>
               </div>
-              <Button variant="ghost" size="icon" onClick={() => copyToClipboard(transactionRef)}><Copy className="h-4 w-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={() => voucherDetails && copyToClipboard(voucherDetails.transactionRef)}><Copy className="h-4 w-4" /></Button>
             </div>
           </div>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setIsPaid(false)}>Close</AlertDialogAction>
+            <AlertDialogAction onClick={closeDialog}>Close</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
