@@ -5,12 +5,13 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  "projectId": "rosec-connect",
+  "appId": "1:901723644785:web:1d9dac8110d733b7e40cd0",
+  "storageBucket": "rosec-connect.firebasestorage.app",
+  "apiKey": "AIzaSyBwW6vZlZT5SCxcKFbgCLmgX7E7giO63Uw",
+  "authDomain": "rosec-connect.firebaseapp.com",
+  "measurementId": "",
+  "messagingSenderId": "901723644785"
 };
 
 // Initialize Firebase
