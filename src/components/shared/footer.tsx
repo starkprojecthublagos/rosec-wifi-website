@@ -11,7 +11,7 @@ export function Footer() {
           <div className="mb-6 md:mb-0">
             <Link href="/" className="flex items-center space-x-2">
               <Wifi className="h-7 w-7 text-primary" />
-              <span className="font-bold text-lg font-headline text-foreground">Rosec Connect</span>
+              <span className="font-bold text-lg font-headline text-foreground">Rosec Wifi</span>
             </Link>
             <p className="mt-2 text-sm max-w-xs">
               Premium university internet service provider, delivering fast and reliable connectivity to students.
@@ -44,7 +44,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t border-border pt-6 text-center text-sm">
-          <p>&copy; {currentYear} Rosec Connect. All rights reserved.</p>
+          <p>&copy; {currentYear} Rosec Wifi. All rights reserved.</p>
         </div>
       </div>
     </footer>

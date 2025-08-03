@@ -36,7 +36,11 @@ export default function SupportPage() {
                         </li>
                         <li className="flex items-center gap-3">
                             <strong>Phone:</strong>
-                            <a href="tel:+2348012345678" className="text-primary hover:underline">+234 801 234 5678</a>
+                            <a href="tel:+2348084167651" className="text-primary hover:underline">08084167651</a>
+                        </li>
+                         <li className="flex items-center gap-3">
+                            <strong>WhatsApp:</strong>
+                            <a href="https://wa.me/2348069610482" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">08069610482</a>
                         </li>
                     </ul>
                 </div>

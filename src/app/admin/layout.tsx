@@ -1,4 +1,3 @@
-
 'use client';
 
 import type { Metadata } from 'next';
@@ -29,7 +28,7 @@ const AdminUser = () => (
     </Avatar>
     <div className="hidden md:block">
       <p className="text-sm font-semibold">Admin User</p>
-      <p className="text-xs text-muted-foreground">admin@rosec.com</p>
+      <p className="text-xs text-muted-foreground">edafesonvictor@gmail.com</p>
     </div>
   </div>
 );
@@ -42,7 +41,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarHeader className="h-16 flex items-center justify-center p-0">
             <Link href="/" className="flex items-center gap-2 font-bold text-primary">
               <Wifi className="h-7 w-7" />
-              <span className="text-lg font-headline group-data-[collapsible=icon]:hidden">Rosec Connect</span>
+              <span className="text-lg font-headline group-data-[collapsible=icon]:hidden">Rosec Wifi</span>
             </Link>
           </SidebarHeader>
           <Separator />

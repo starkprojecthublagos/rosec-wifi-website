@@ -6,7 +6,7 @@ export default function AboutPage() {
     <div className="bg-background">
       <section className="relative py-20 md:py-32 bg-primary/5">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl font-bold tracking-tight md:text-5xl font-headline">About Rosec Connect</h1>
+          <h1 className="text-4xl font-bold tracking-tight md:text-5xl font-headline">About Rosec Wifi</h1>
           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
             Connecting students with fast, reliable, and affordable internet. We're dedicated to empowering the next generation through digital access.
           </p>
@@ -19,7 +19,7 @@ export default function AboutPage() {
             <div>
               <h2 className="font-headline text-3xl font-bold mb-4">Our Story</h2>
               <p className="text-muted-foreground text-lg mb-6">
-                Founded by a team of passionate technologists and former students, Rosec Connect was born from a simple observation: students need better internet. We experienced firsthand the frustration of slow, unreliable connections that hindered learning and communication. We knew there had to be a better way.
+                Founded by a team of passionate technologists and former students, Rosec Wifi was born from a simple observation: students need better internet. We experienced firsthand the frustration of slow, unreliable connections that hindered learning and communication. We knew there had to be a better way.
               </p>
               <p className="text-muted-foreground text-lg">
                 Today, we are on a mission to bridge the digital divide in university hostels across the nation, providing top-tier infrastructure and student-friendly pricing to ensure every student has the tools they need to succeed.

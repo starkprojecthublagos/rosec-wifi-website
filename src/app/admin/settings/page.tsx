@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,7 +17,7 @@ export default function SettingsPage() {
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="business-name">Business Name</Label>
-                        <Input id="business-name" defaultValue="Rosec Connect" />
+                        <Input id="business-name" defaultValue="Rosec Wifi" />
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="support-email">Support Email</Label>

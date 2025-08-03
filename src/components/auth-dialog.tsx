@@ -94,7 +94,7 @@ export function AuthDialog({ open, onOpenChange, onAuthSuccess }: AuthDialogProp
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="font-headline text-2xl">Welcome to Rosec Connect</DialogTitle>
+          <DialogTitle className="font-headline text-2xl">Welcome to Rosec Wifi</DialogTitle>
           <DialogDescription>
             Access your account or create a new one to get started.
           </DialogDescription>

@@ -29,7 +29,7 @@ export function FeaturesSection() {
     <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="font-headline text-3xl font-bold tracking-tight md:text-4xl">Why Choose Rosec Connect?</h2>
+          <h2 className="font-headline text-3xl font-bold tracking-tight md:text-4xl">Why Choose Rosec Wifi?</h2>
           <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
             We are committed to providing the best internet experience on campus.
           </p>

@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
-  title: 'Rosec Connect - Premium University Internet',
+  title: 'Rosec Wifi - Premium University Internet',
   description: 'Purchase WiFi data plans for your university hostel with ease. Fast, reliable internet for students.',
 };
 
