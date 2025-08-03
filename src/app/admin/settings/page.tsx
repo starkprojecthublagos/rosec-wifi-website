@@ -21,7 +21,7 @@ export default function SettingsPage() {
                     </div>
                      <div className="space-y-2">
                         <Label htmlFor="support-email">Support Email</Label>
-                        <Input id="support-email" type="email" defaultValue="support@rosec.com" />
+                        <Input id="support-email" type="email" defaultValue="support@rosecwifi.com" />
                     </div>
                 </CardContent>
             </Card>

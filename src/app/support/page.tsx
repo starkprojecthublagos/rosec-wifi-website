@@ -32,7 +32,7 @@ export default function SupportPage() {
                     <ul className="space-y-3 text-lg">
                         <li className="flex items-center gap-3">
                             <strong>Email:</strong>
-                            <a href="mailto:support@rosec.com" className="text-primary hover:underline">support@rosec.com</a>
+                            <a href="mailto:support@rosecwifi.com" className="text-primary hover:underline">support@rosecwifi.com</a>
                         </li>
                         <li className="flex items-center gap-3">
                             <strong>Phone:</strong>
@@ -46,7 +46,7 @@ export default function SupportPage() {
                 </div>
                 <div className="order-1 md:order-2">
                     <Image
-                        src="https://images.unsplash.com/photo-1586469642938-b121ba5427b6?q=80&w=1470"
+                        src="https://images.unsplash.com/photo-1556740772-1a741367b93e?q=80&w=1470"
                         alt="Support team"
                         width={600}
                         height={400}

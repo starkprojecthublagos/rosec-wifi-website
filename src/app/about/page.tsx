@@ -26,7 +26,7 @@ export default function AboutPage() {
               </p>
             </div>
             <Image
-              src="https://images.unsplash.com/photo-1571260899241-312d1babc0ab?q=80&w=1470"
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1471"
               alt="Our team"
               width={600}
               height={400}

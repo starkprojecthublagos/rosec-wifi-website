@@ -24,7 +24,7 @@ export default function TermsOfServicePage() {
             <p>We reserve the right to modify these Terms at any time. We will notify you of any changes by posting the new Terms on this page.</p>
 
             <h2>7. Contact Us</h2>
-            <p>If you have any questions about these Terms, please contact us at support@rosec.com.</p>
+            <p>If you have any questions about these Terms, please contact us at support@rosecwifi.com.</p>
           </div>
         </div>
       </section>

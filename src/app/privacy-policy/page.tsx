@@ -24,7 +24,7 @@ export default function PrivacyPolicyPage() {
             <p>You have the right to access, correct, or delete your personal information. Please contact us to make such a request.</p>
 
             <h2>7. Contact Us</h2>
-            <p>If you have any questions about this Privacy Policy, please contact us at support@rosec.com.</p>
+            <p>If you have any questions about this Privacy Policy, please contact us at support@rosecwifi.com.</p>
           </div>
         </div>
       </section>

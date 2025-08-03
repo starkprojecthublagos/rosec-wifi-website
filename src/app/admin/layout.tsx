@@ -1,7 +1,11 @@
 'use client';
 
+import { useEffect } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { onAuthStateChanged, type User } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import {
   SidebarProvider,
   Sidebar,
@@ -18,6 +22,7 @@ import { LogOut, Wifi } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { AdminSidebarItems } from '@/components/admin/admin-sidebar-items';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 const AdminUser = () => (
@@ -34,6 +39,27 @@ const AdminUser = () => (
 );
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+      if (!user || user.email !== 'edafesonvictor@gmail.com') {
+        router.push('/');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+
+  // Render a loading state while checking auth
+  if (auth.currentUser?.email !== 'edafesonvictor@gmail.com') {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Skeleton className="h-full w-full" />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-muted/40">
       <SidebarProvider>
