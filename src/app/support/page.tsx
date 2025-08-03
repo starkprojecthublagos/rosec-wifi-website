@@ -46,12 +46,12 @@ export default function SupportPage() {
                 </div>
                 <div className="order-1 md:order-2">
                     <Image
-                        src="https://images.unsplash.com/photo-1556740772-1a741367b93e?q=80&w=1470"
+                        src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1470"
                         alt="Support team"
                         width={600}
                         height={400}
                         className="rounded-lg shadow-premium"
-                        data-ai-hint="friendly support person"
+                        data-ai-hint="nigerian university students"
                     />
                 </div>
             </div>

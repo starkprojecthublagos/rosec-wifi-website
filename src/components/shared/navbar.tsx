@@ -89,7 +89,7 @@ export function Navbar() {
         <div className="container flex h-16 items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Wifi className="h-7 w-7 text-primary" />
-            <span className="font-bold text-lg font-headline">Rosec Wifi</span>
+            <span className="text-lg font-bold font-headline bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Rosec Wifi</span>
           </Link>
           <div className="hidden md:flex flex-1 items-center gap-6 text-sm">
             <NavItems />
@@ -145,7 +145,7 @@ export function Navbar() {
               <SheetContent side="left">
                 <Link href="/" className="mr-6 flex items-center space-x-2 mb-6">
                   <Wifi className="h-7 w-7 text-primary" />
-                  <span className="font-bold text-lg font-headline">Rosec Wifi</span>
+                  <span className="text-lg font-bold font-headline bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Rosec Wifi</span>
                 </Link>
                 <nav className="flex flex-col gap-4 text-lg">
                   <NavItems />

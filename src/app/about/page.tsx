@@ -26,12 +26,12 @@ export default function AboutPage() {
               </p>
             </div>
             <Image
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1471"
+              src="https://images.unsplash.com/photo-1611223930232-2a0a2a781373?q=80&w=1470"
               alt="Our team"
               width={600}
               height={400}
               className="rounded-lg shadow-premium"
-              data-ai-hint="diverse team working"
+              data-ai-hint="nigerian students smiling"
             />
           </div>
         </div>
