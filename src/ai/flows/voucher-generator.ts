@@ -12,7 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 
 const VoucherGenerationInputSchema = z.object({
   planId: z.string().describe('The ID of the plan being purchased.'),
@@ -86,3 +86,69 @@ const voucherGeneratorFlow = ai.defineFlow(
     };
   }
 );
+
+
+const seedVouchersFlow = ai.defineFlow(
+  {
+    name: 'seedVouchersFlow',
+    inputSchema: z.void(),
+    outputSchema: z.string(),
+  },
+  async () => {
+    const voucherCodes = [
+      '473018', '267835', '567010',
+      '959595', '342629', '526049',
+      '784821', '986812', '761161',
+      '684956', '507390', '155592',
+      '681510', '413863', '139555'
+    ];
+
+    const planDetails = {
+      planId: 'student',
+      planName: 'Student Plan',
+    };
+
+    try {
+      const batch = writeBatch(db);
+      const vouchersCollection = collection(db, 'vouchers');
+
+      voucherCodes.forEach(code => {
+        const docRef = addDoc(vouchersCollection, {
+            code: code,
+            planId: planDetails.planId,
+            planName: planDetails.planName,
+            status: 'Active', // Initial status
+            createdAt: serverTimestamp(),
+            userId: null, // Not assigned to a user yet
+            transactionRef: 'seeded'
+        })._key.path.segments.join('/');
+        
+        // This is a workaround to get a document reference for a new document in a batch
+        const newDocRef = doc(db, 'vouchers');
+        batch.set(newDocRef, {
+           code: code,
+           planId: planDetails.planId,
+           planName: planDetails.planName,
+           status: 'Active',
+           createdAt: serverTimestamp(),
+           userId: null, 
+           transactionRef: 'seeded',
+        });
+      });
+
+      await batch.commit();
+      
+      const message = `${voucherCodes.length} vouchers have been successfully seeded to the database.`;
+      console.log(message);
+      return message;
+
+    } catch (e) {
+      console.error("Error seeding vouchers: ", e);
+      throw new Error('Failed to seed vouchers to the database.');
+    }
+  }
+);
+
+export async function seedVouchers(): Promise<string> {
+    return seedVouchersFlow();
+}

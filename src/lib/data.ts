@@ -70,6 +70,15 @@ export const dataPlans: DataPlan[] = [
     features: ['2GB Data', '7 Day Validity', 'Great for Socials', 'Basic Speed'],
   },
   {
+    id: 'student',
+    name: 'Student Plan',
+    price: 600,
+    data: '3GB',
+    validity: '30 Days',
+    description: 'Perfect for student assignments.',
+    features: ['3GB Data', '30 Day Validity', 'Reliable Speed', 'Single Device'],
+  },
+  {
     id: 'standard',
     name: 'Standard',
     price: 1500,
