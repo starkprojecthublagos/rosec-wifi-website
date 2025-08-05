@@ -12,7 +12,7 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { db } from '@/lib/firebase';
-import { collection, addDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, writeBatch, doc } from 'firebase/firestore';
 
 const VoucherGenerationInputSchema = z.object({
   planId: z.string().describe('The ID of the plan being purchased.'),
@@ -113,18 +113,7 @@ const seedVouchersFlow = ai.defineFlow(
       const vouchersCollection = collection(db, 'vouchers');
 
       voucherCodes.forEach(code => {
-        const docRef = addDoc(vouchersCollection, {
-            code: code,
-            planId: planDetails.planId,
-            planName: planDetails.planName,
-            status: 'Active', // Initial status
-            createdAt: serverTimestamp(),
-            userId: null, // Not assigned to a user yet
-            transactionRef: 'seeded'
-        })._key.path.segments.join('/');
-        
-        // This is a workaround to get a document reference for a new document in a batch
-        const newDocRef = doc(db, 'vouchers');
+        const newDocRef = doc(vouchersCollection);
         batch.set(newDocRef, {
            code: code,
            planId: planDetails.planId,

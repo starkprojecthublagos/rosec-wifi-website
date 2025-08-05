@@ -1,10 +1,11 @@
+
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { onAuthStateChanged, type User } from 'firebase/auth';
+import { usePathname, useRouter } from 'next/navigation';
+import { onAuthStateChanged, type User, signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import {
   SidebarProvider,
@@ -23,7 +24,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { AdminSidebarItems } from '@/components/admin/admin-sidebar-items';
 import { Skeleton } from '@/components/ui/skeleton';
-
+import { useToast } from '@/hooks/use-toast';
 
 const AdminUser = () => (
   <div className="flex items-center gap-3">
@@ -40,24 +41,52 @@ const AdminUser = () => (
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
-      if (!user || user.email !== 'edafesonvictor@gmail.com') {
-        router.push('/');
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (!currentUser || currentUser.email !== 'edafesonvictor@gmail.com') {
+        if (pathname.startsWith('/admin')) {
+          router.push('/');
+        }
       }
+      setIsLoading(false);
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, [router, pathname]);
 
-  // Render a loading state while checking auth
-  if (auth.currentUser?.email !== 'edafesonvictor@gmail.com') {
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast({
+        title: 'Logged Out',
+        description: 'You have been successfully logged out.',
+      });
+      router.push('/');
+    } catch (error: any) {
+       toast({
+        title: 'Logout Failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Skeleton className="h-full w-full" />
       </div>
     );
+  }
+
+  if (!user || user.email !== 'edafesonvictor@gmail.com') {
+    return null; 
   }
 
   return (
@@ -78,8 +107,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <SidebarFooter className="p-2">
              <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip={{ children: 'Logout' }}>
-                        <Link href="#"><LogOut /><span>Logout</span></Link>
+                    <SidebarMenuButton onClick={handleLogout} tooltip={{ children: 'Logout' }}>
+                        <LogOut /><span>Logout</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>

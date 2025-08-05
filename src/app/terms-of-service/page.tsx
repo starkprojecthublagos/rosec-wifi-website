@@ -1,3 +1,4 @@
+
 export default function TermsOfServicePage() {
   return (
     <div className="bg-background">

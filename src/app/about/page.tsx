@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { Wifi, Target, Eye } from 'lucide-react';
 
