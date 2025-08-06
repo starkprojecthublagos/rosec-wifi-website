@@ -31,10 +31,6 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  
-  // Configure for GitHub Pages deployment
-  basePath: '/rosec-wifi-website',
-  assetPrefix: '/rosec-wifi-website/',
 };
 
 export default nextConfig;
