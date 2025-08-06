@@ -1,7 +1,12 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Static export configuration for GitHub Pages
+  output: 'export',
+  trailingSlash: true,
+  skipTrailingSlashRedirect: true,
+  distDir: 'dist',
+  
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -9,6 +14,8 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    // Required for static export
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -24,6 +31,10 @@ const nextConfig: NextConfig = {
       }
     ],
   },
+  
+  // Uncomment and replace 'your-repo-name' with your actual repository name if needed
+  // basePath: '/your-repo-name',
+  // assetPrefix: '/your-repo-name/',
 };
 
 export default nextConfig;
