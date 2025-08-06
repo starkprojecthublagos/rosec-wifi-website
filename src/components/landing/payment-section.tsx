@@ -16,7 +16,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import type { User as FirebaseUser } from 'firebase/auth';
-import { generateVoucher } from '@/ai/flows/voucher-generator';
 
 interface PaymentSectionProps {
   selectedPlan: DataPlan;
@@ -43,15 +42,14 @@ export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionP
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const result = await generateVoucher({
-        planId: selectedPlan.id,
-        planName: selectedPlan.name,
-        planPrice: selectedPlan.price,
-        userId: user.uid,
-        paymentGateway: gateway,
-      });
+      // Generate a simple voucher code without AI
+      const transactionRef = `TXN-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+      const voucherCode = `${selectedPlan.name.slice(0, 3).toUpperCase()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
 
-      setVoucherDetails(result);
+      setVoucherDetails({
+        transactionRef,
+        voucherCode
+      });
       setIsPaid(true);
       toast({
         title: "Payment Successful!",
@@ -59,7 +57,7 @@ export function PaymentSection({ selectedPlan, user, onPayNow }: PaymentSectionP
       });
 
     } catch (error) {
-      console.error("Payment or voucher generation failed:", error);
+      console.error("Payment failed:", error);
       toast({
         title: "Something Went Wrong",
         description: "We couldn't process your payment. Please try again.",
