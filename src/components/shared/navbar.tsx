@@ -1,11 +1,11 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Wifi, User, LogOut, LayoutDashboard } from 'lucide-react';
+import { Menu, Wifi, LogOut, LayoutDashboard, User } from 'lucide-react';
 import { AuthDialog } from '../auth-dialog';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
@@ -18,27 +18,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
-import { auth } from '@/lib/firebase';
-import type { User as FirebaseUser } from 'firebase/auth';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/auth-context';
 
 
 export function Navbar() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isAuthDialogOpen, setAuthDialogOpen] = useState(false);
-  const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
-  const { toast } = useToast();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setIsLoading(false);
-    });
-    return () => unsubscribe();
-  }, []);
+  const { user, loading, logout } = useAuth();
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -51,19 +38,7 @@ export function Navbar() {
   };
   
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      toast({
-        title: 'Logged Out',
-        description: 'You have been successfully logged out.',
-      });
-    } catch (error: any) {
-       toast({
-        title: 'Logout Failed',
-        description: error.message,
-        variant: 'destructive',
-      });
-    }
+    await logout();
   };
 
   const NavItems = () => (
@@ -96,7 +71,7 @@ export function Navbar() {
             <NavItems />
           </div>
           <div className="flex flex-1 items-center justify-end space-x-2">
-            {!isLoading && (
+            {!loading && (
               user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -118,6 +93,7 @@ export function Navbar() {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild><Link href="/dashboard"><LayoutDashboard /><span>Dashboard</span></Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link href="/profile"><User /><span>Profile</span></Link></DropdownMenuItem>
                   <DropdownMenuItem asChild><Link href="/support">Support</Link></DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
@@ -156,7 +132,7 @@ export function Navbar() {
           </div>
         </div>
       </header>
-      <AuthDialog open={isAuthDialogOpen} onOpenChange={setAuthDialogOpen} onAuthSuccess={() => setUser(auth.currentUser)} />
+      <AuthDialog open={isAuthDialogOpen} onOpenChange={setAuthDialogOpen} onAuthSuccess={() => {}} />
     </>
   );
 }
