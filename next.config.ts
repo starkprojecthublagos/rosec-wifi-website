@@ -32,9 +32,9 @@ const nextConfig: NextConfig = {
     ],
   },
   
-  // Uncomment and replace 'your-repo-name' with your actual repository name if needed
-  // basePath: '/your-repo-name',
-  // assetPrefix: '/your-repo-name/',
+  // Configure for GitHub Pages deployment
+  basePath: '/rosec-wifi-website',
+  assetPrefix: '/rosec-wifi-website/',
 };
 
 export default nextConfig;
